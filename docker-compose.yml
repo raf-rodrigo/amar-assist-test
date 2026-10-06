@@ -1,0 +1,95 @@
+services:
+  laravel.test:
+    build:
+      context: ./backend/vendor/laravel/sail/runtimes/8.1
+      dockerfile: Dockerfile
+      args:
+        WWWGROUP: "${WWWGROUP:-1000}"
+        NODE_VERSION: 20
+    image: sail-8.1/app
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    ports:
+      - "8080:80"
+    environment:
+      WWWUSER: "${WWWUSER:-1000}"
+      LARAVEL_SAIL: 1
+      XDEBUG_MODE: "${SAIL_XDEBUG_MODE:-off}"
+      XDEBUG_CONFIG: "${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}"
+    volumes:
+      - ./backend:/var/www/html
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    command: npm run dev -- --host 0.0.0.0
+    ports:
+      - "${VITE_PORT:-5173}:5173"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - laravel.test
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: financial_manager
+      POSTGRES_USER: financial
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "${FORWARD_DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U financial -d financial_manager"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "${FORWARD_REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  queue:
+    image: sail-8.1/app
+    command: php artisan queue:work --tries=3 --timeout=90
+    restart: unless-stopped
+    environment:
+      WWWUSER: "${WWWUSER:-1000}"
+      LARAVEL_SAIL: 1
+    volumes:
+      - ./backend:/var/www/html
+    depends_on:
+      laravel.test:
+        condition: service_started
+      redis:
+        condition: service_healthy
+
+  scheduler:
+    image: sail-8.1/app
+    command: sh -c "while true; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
+    restart: unless-stopped
+    environment:
+      WWWUSER: "${WWWUSER:-1000}"
+      LARAVEL_SAIL: 1
+    volumes:
+      - ./backend:/var/www/html
+    depends_on:
+      laravel.test:
+        condition: service_started
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
