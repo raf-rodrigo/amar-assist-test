@@ -86,10 +86,10 @@ onMounted(initialize)
         <p v-if="errors.general" class="text-sm text-rose-600">{{ errors.general[0] }}</p>
         <div class="flex gap-2"><button class="btn">Salvar</button><button v-if="form.id" class="btn-secondary" type="button" @click="reset">Cancelar</button></div>
       </form>
-      <div class="card overflow-x-auto">
+      <div class="card">
         <form class="mb-4 flex flex-col gap-2 sm:flex-row" @submit.prevent="load()"><input v-model="search" class="input" placeholder="Pesquisar descrição ou categoria"><button class="btn">Pesquisar</button></form>
-        <table class="min-w-[700px] w-full text-left"><thead><tr class="border-b"><th class="py-3">Data</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th></th></tr></thead>
-          <tbody><tr v-for="item in items" :key="item.id" class="border-b last:border-0"><td class="py-3">{{ formatDate(item.date) }}</td><td>{{ item.description }}</td><td>{{ item.category.description }}</td><td>{{ money(item.amount) }}</td><td class="whitespace-nowrap text-right"><button class="btn-secondary mr-2" @click="edit(item)">Editar</button><button class="btn-danger" @click="requestRemove(item)">Excluir</button></td></tr></tbody>
+        <table class="w-full table-fixed text-left text-xs sm:text-sm"><thead><tr class="border-b"><th class="w-[22%] py-3 sm:w-[15%]">Data</th><th class="w-[28%] sm:w-[30%]">Descrição</th><th class="w-[22%] border-l border-slate-200 pl-2 sm:w-[22%]">Categoria</th><th class="w-[13%] pl-2 sm:w-[13%]">Valor</th><th class="w-[15%] sm:w-[20%]"></th></tr></thead>
+          <tbody><tr v-for="item in items" :key="item.id" class="border-b align-middle last:border-0"><td class="py-3">{{ formatDate(item.date) }}</td><td class="wrap-text py-3">{{ item.description }}</td><td class="wrap-text border-l border-slate-100 py-3 pl-2 text-slate-600">{{ item.category.description }}</td><td class="py-3 pl-2">{{ money(item.amount) }}</td><td class="py-3"><div class="flex flex-col gap-1 sm:flex-row sm:justify-end"><button class="btn-secondary px-2 py-1 text-xs sm:mr-1" @click="edit(item)">Editar</button><button class="btn-danger px-2 py-1 text-xs" @click="requestRemove(item)">Excluir</button></div></td></tr></tbody>
         </table>
         <p v-if="!items.length" class="py-6 text-center text-slate-500">Nenhum registro encontrado.</p>
         <PaginationBar :meta="meta" @change="load" />

@@ -24,16 +24,16 @@
                                 <strong>{{ \Carbon\Carbon::parse($dueDate)->format('d/m/Y') }}</strong>.
                             </p>
 
-                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse; border:1px solid #eee1f3; border-radius:10px; overflow:hidden;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="table-layout:fixed; border-collapse:collapse; border:1px solid #eee1f3; border-radius:10px; overflow:hidden;">
                                 <tr style="background:#f7f1fa;">
-                                    <th align="left" style="padding:12px; color:#54216e; font-size:13px;">Descrição</th>
-                                    <th align="left" style="padding:12px; color:#54216e; font-size:13px;">Categoria</th>
-                                    <th align="right" style="padding:12px; color:#54216e; font-size:13px;">Valor</th>
+                                    <th width="42%" align="left" style="padding:12px; color:#54216e; font-size:13px;">Descrição</th>
+                                    <th width="33%" align="left" style="padding:12px; color:#54216e; font-size:13px;">Categoria</th>
+                                    <th width="25%" align="right" style="padding:12px; color:#54216e; font-size:13px;">Valor</th>
                                 </tr>
                                 @foreach ($expenses as $expense)
                                     <tr>
-                                        <td style="padding:13px 12px; border-top:1px solid #eee1f3; font-size:14px;">{{ $expense->description }}</td>
-                                        <td style="padding:13px 12px; border-top:1px solid #eee1f3; font-size:14px; color:#64748b;">{{ $expense->category->description }}</td>
+                                        <td style="padding:13px 12px; border-top:1px solid #eee1f3; font-size:14px; overflow-wrap:anywhere; word-break:break-word;">{{ $expense->description }}</td>
+                                        <td style="padding:13px 12px; border-top:1px solid #eee1f3; font-size:14px; color:#64748b; overflow-wrap:anywhere; word-break:break-word;">{{ $expense->category->description }}</td>
                                         <td align="right" style="padding:13px 12px; border-top:1px solid #eee1f3; font-size:14px; white-space:nowrap;">R$ {{ number_format((float) $expense->amount, 2, ',', '.') }}</td>
                                     </tr>
                                 @endforeach

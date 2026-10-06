@@ -9,4 +9,5 @@
   .btn-secondary { @apply rounded-lg bg-brand-100 px-3 py-2 text-sm font-medium text-brand-800 hover:bg-brand-200; }
   .btn-danger { @apply rounded-lg bg-accent-500 px-3 py-2 text-sm font-medium text-white hover:bg-accent-600; }
   .label { @apply mb-1 block text-sm font-medium text-slate-700; }
+  .wrap-text { overflow-wrap: anywhere; white-space: normal; }
 }
