@@ -22,8 +22,14 @@ class SendTomorrowExpenseReminder implements ShouldQueue
         $user = User::find($this->userId);
         if (! $user) return;
 
-        $expenses = $user->expenses()->whereDate('date', $this->date)->orderBy('description')->get();
-        if ($expenses->isNotEmpty()) Mail::to($user)->send(new TomorrowExpensesMail($expenses, $this->date));
+        $expenses = $user->expenses()
+            ->with('category')
+            ->whereDate('date', $this->date)
+            ->orderBy('description')
+            ->get();
+
+        if ($expenses->isNotEmpty()) {
+            Mail::to($user)->send(new TomorrowExpensesMail($user, $expenses, $this->date));
+        }
     }
 }
-
