@@ -41,4 +41,20 @@ class DashboardTest extends TestCase
 
         $this->actingAs($user)->getJson('/api/dashboard')->assertJsonPath('income', '300.00');
     }
+
+    public function test_dashboard_accepts_a_month_and_year_reference(): void
+    {
+        $user = User::factory()->create();
+        $category = $user->categories()->create(['description' => 'General']);
+        $user->incomes()->create(['category_id' => $category->id, 'date' => '2026-09-15', 'description' => 'Previous month', 'amount' => 800]);
+
+        $this->actingAs($user)->getJson('/api/dashboard?month=2026-09')
+            ->assertOk()
+            ->assertJson([
+                'month' => '2026-09',
+                'income' => '800.00',
+                'expense' => '0.00',
+                'balance' => '800.00',
+            ]);
+    }
 }

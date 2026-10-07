@@ -4,14 +4,19 @@ namespace App\Http\Controllers\Api;
 
 use App\Actions\GetMonthlyDashboard;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DashboardRequest;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function __invoke(Request $request, GetMonthlyDashboard $dashboard): JsonResponse
+    public function __invoke(DashboardRequest $request, GetMonthlyDashboard $dashboard): JsonResponse
     {
-        return response()->json($dashboard->execute($request->user(), now()));
+        $month = $request->validated('month');
+        $referenceMonth = $month
+            ? Carbon::createFromFormat('!Y-m', $month)
+            : now();
+
+        return response()->json($dashboard->execute($request->user(), $referenceMonth));
     }
 }
-
