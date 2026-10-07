@@ -9,10 +9,20 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function login(credentials) {
     const { data } = await api.post('/login', credentials)
+    saveSession(data)
+    await router.push('/')
+  }
+
+  async function register(payload) {
+    const { data } = await api.post('/register', payload)
+    saveSession(data)
+    await router.push('/')
+  }
+
+  function saveSession(data) {
     user.value = data.user
     localStorage.setItem('token', data.token)
     localStorage.setItem('user', JSON.stringify(data.user))
-    await router.push('/')
   }
 
   async function logout() {
@@ -24,6 +34,5 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  return { user, isAuthenticated, login, logout }
+  return { user, isAuthenticated, login, register, logout }
 })
-

@@ -1,11 +1,13 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useAuthStore } from '../stores/auth'
+import RegisterModal from '../components/RegisterModal.vue'
 
 const auth = useAuthStore()
 const form = reactive({ email: 'demo@example.com', password: 'password' })
 const error = ref('')
 const loading = ref(false)
+const registerModalOpen = ref(false)
 
 async function submit() {
   loading.value = true
@@ -27,5 +29,12 @@ async function submit() {
       <p v-if="error" class="text-sm text-rose-600">{{ error }}</p>
       <button class="btn w-full" :disabled="loading">{{ loading ? 'Entrando...' : 'Entrar' }}</button>
     </form>
+    <p class="mt-6 text-center text-sm text-slate-600">
+      Ainda não possui uma conta?
+      <button class="font-semibold text-brand-700 hover:text-accent-600 hover:underline" type="button" @click="registerModalOpen = true">
+        Criar cadastro
+      </button>
+    </p>
   </section>
+  <RegisterModal v-if="registerModalOpen" @close="registerModalOpen = false" />
 </template>

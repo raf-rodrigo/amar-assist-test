@@ -4,6 +4,7 @@ import DashboardView from '../views/DashboardView.vue'
 import CategoriesView from '../views/CategoriesView.vue'
 import EntriesView from '../views/EntriesView.vue'
 import ProfileView from '../views/ProfileView.vue'
+import SettingsView from '../views/SettingsView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -14,6 +15,7 @@ const router = createRouter({
     { path: '/incomes', component: EntriesView, props: { type: 'incomes' } },
     { path: '/expenses', component: EntriesView, props: { type: 'expenses' } },
     { path: '/profile', component: ProfileView },
+    { path: '/settings', component: SettingsView },
   ],
 })
 

@@ -7,22 +7,13 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
-     */
+    /** Define o horário das tarefas automáticas da aplicação. */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('expenses:dispatch-reminders')->dailyAt('08:00')->withoutOverlapping();
+        $schedule->command('expenses:dispatch-reminders')->everyMinute()->withoutOverlapping();
     }
 
-    /**
-     * Register the commands for the application.
-     *
-     * @return void
-     */
+    /** Carrega os comandos personalizados do sistema. */
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
