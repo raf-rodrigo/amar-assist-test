@@ -57,4 +57,20 @@ class DashboardTest extends TestCase
                 'balance' => '800.00',
             ]);
     }
+
+    public function test_entry_observer_clears_cache_for_the_entry_month(): void
+    {
+        $user = User::factory()->create();
+        $category = $user->categories()->create(['description' => 'General']);
+
+        $this->actingAs($user)->getJson('/api/dashboard?month=2026-11')->assertJsonPath('expense', '0.00');
+        $user->expenses()->create([
+            'category_id' => $category->id,
+            'date' => '2026-11-13',
+            'description' => 'Future expense',
+            'amount' => 350,
+        ]);
+
+        $this->actingAs($user)->getJson('/api/dashboard?month=2026-11')->assertJsonPath('expense', '350.00');
+    }
 }

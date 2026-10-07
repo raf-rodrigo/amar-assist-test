@@ -9,11 +9,19 @@ class ExpenseObserver
 {
     public function saved(Expense $expense): void
     {
-        FinancialEntryChanged::dispatch($expense->user_id);
+        $this->dispatchChange($expense);
     }
 
     public function deleted(Expense $expense): void
     {
-        FinancialEntryChanged::dispatch($expense->user_id);
+        $this->dispatchChange($expense);
+    }
+
+    private function dispatchChange(Expense $expense): void
+    {
+        FinancialEntryChanged::dispatch($expense->user_id, array_filter([
+            optional($expense->date)->toDateString(),
+            $expense->getOriginal('date'),
+        ]));
     }
 }
