@@ -14,10 +14,11 @@ class IncomeController extends Controller
     public function index(Request $request): JsonResponse
     {
         $search = trim((string) $request->query('search'));
+        $searchTerm = mb_strtolower($search);
         $items = $request->user()->incomes()->with('category:id,description')
             ->when($search !== '', fn (Builder $query) => $query->where(fn (Builder $nested) => $nested
-                ->where('description', 'ilike', "%{$search}%")
-                ->orWhereHas('category', fn (Builder $category) => $category->where('description', 'ilike', "%{$search}%"))))
+                ->whereRaw('LOWER(description) LIKE ?', ["%{$searchTerm}%"])
+                ->orWhereHas('category', fn (Builder $category) => $category->whereRaw('LOWER(description) LIKE ?', ["%{$searchTerm}%"]))))
             ->orderByDesc('date')->paginate(20)->withQueryString();
         return response()->json($items);
     }
@@ -50,4 +51,3 @@ class IncomeController extends Controller
         return $request->user()->incomes()->findOrFail($id);
     }
 }
-

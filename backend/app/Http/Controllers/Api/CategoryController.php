@@ -13,8 +13,9 @@ class CategoryController extends Controller
     public function index(Request $request): JsonResponse
     {
         $search = trim((string) $request->query('search'));
+        $searchTerm = mb_strtolower($search);
         $categories = $request->user()->categories()
-            ->when($search !== '', fn ($query) => $query->where('description', 'ilike', "%{$search}%"))
+            ->when($search !== '', fn ($query) => $query->whereRaw('LOWER(description) LIKE ?', ["%{$searchTerm}%"]))
             ->orderBy('description')->paginate(20)->withQueryString();
 
         return response()->json($categories);

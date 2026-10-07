@@ -25,5 +25,20 @@ class DashboardTest extends TestCase
             'income' => '500.00', 'expense' => '125.50', 'balance' => '374.50',
         ]);
     }
-}
 
+    public function test_financial_entry_observer_clears_dashboard_cache(): void
+    {
+        $user = User::factory()->create();
+        $category = $user->categories()->create(['description' => 'General']);
+
+        $this->actingAs($user)->getJson('/api/dashboard')->assertJsonPath('income', '0.00');
+        $user->incomes()->create([
+            'category_id' => $category->id,
+            'date' => now()->toDateString(),
+            'description' => 'Income after cache',
+            'amount' => 300,
+        ]);
+
+        $this->actingAs($user)->getJson('/api/dashboard')->assertJsonPath('income', '300.00');
+    }
+}
