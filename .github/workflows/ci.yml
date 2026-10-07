@@ -1,4 +1,4 @@
-name: CI and automatic merge
+name: CI
 
 on:
   push:
@@ -6,10 +6,6 @@ on:
       - '**'
       - '!main'
   workflow_dispatch:
-
-permissions:
-  contents: write
-  pull-requests: write
 
 jobs:
   test:
@@ -55,37 +51,3 @@ jobs:
       - name: Build frontend
         working-directory: frontend
         run: npm run build
-
-  merge:
-    name: Create pull request and enable auto-merge
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/main'
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Create or find pull request
-        id: pull-request
-        env:
-          GH_TOKEN: ${{ github.token }}
-          HEAD_BRANCH: ${{ github.ref_name }}
-        run: |
-          PR_URL=$(gh pr list --base main --head "$HEAD_BRANCH" --state open --json url --jq '.[0].url')
-
-          if [ -z "$PR_URL" ]; then
-            PR_URL=$(gh pr create \
-              --base main \
-              --head "$HEAD_BRANCH" \
-              --title "CI: merge $HEAD_BRANCH into main" \
-              --body "This pull request was created automatically after the CI pipeline passed.")
-          fi
-
-          echo "url=$PR_URL" >> "$GITHUB_OUTPUT"
-
-      - name: Enable automatic merge
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_URL: ${{ steps.pull-request.outputs.url }}
-        run: gh pr merge "$PR_URL" --auto --squash --delete-branch
