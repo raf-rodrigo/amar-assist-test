@@ -86,8 +86,8 @@ jobs:
 
           echo "url=$PR_URL" >> "$GITHUB_OUTPUT"
 
-      - name: Enable automatic merge
+      - name: Merge pull request
         env:
           GH_TOKEN: ${{ github.token }}
           PR_URL: ${{ steps.pull-request.outputs.url }}
-        run: gh pr merge "$PR_URL" --auto --squash --delete-branch
+        run: gh pr merge "$PR_URL" --squash --delete-branch
