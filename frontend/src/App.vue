@@ -55,6 +55,9 @@ async function logout() {
             <RouterLink class="block px-4 py-3 text-sm hover:bg-slate-50" to="/profile" @click="profileMenuOpen = false">
               Meu perfil
             </RouterLink>
+            <RouterLink class="block px-4 py-3 text-sm hover:bg-slate-50" to="/settings" @click="profileMenuOpen = false">
+              Configurações
+            </RouterLink>
             <button class="block w-full px-4 py-3 text-left text-sm text-rose-600 hover:bg-rose-50" type="button" @click="logout">
               Sair
             </button>

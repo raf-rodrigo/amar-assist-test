@@ -57,4 +57,24 @@ class FinancialCrudTest extends TestCase
         $this->actingAs($user)->deleteJson("/api/expenses/{$created}")->assertNoContent();
         $this->assertDatabaseMissing('expenses', ['id' => $created]);
     }
+
+    public function test_income_and_expense_lists_can_be_sorted(): void
+    {
+        $user = User::factory()->create();
+        $category = $user->categories()->create(['description' => 'General']);
+        $base = ['category_id' => $category->id, 'date' => now()->toDateString()];
+        $user->incomes()->create([...$base, 'description' => 'Small income', 'amount' => 100]);
+        $user->incomes()->create([...$base, 'description' => 'Large income', 'amount' => 900]);
+        $user->expenses()->create([...$base, 'description' => 'Small expense', 'amount' => 50]);
+        $user->expenses()->create([...$base, 'description' => 'Large expense', 'amount' => 500]);
+
+        $this->actingAs($user)->getJson('/api/incomes?sort_by=amount&sort_direction=asc')
+            ->assertJsonPath('data.0.description', 'Small income');
+        $this->actingAs($user)->getJson('/api/expenses?sort_by=amount&sort_direction=desc')
+            ->assertJsonPath('data.0.description', 'Large expense');
+        $this->actingAs($user)->getJson('/api/incomes?search=900')
+            ->assertJsonPath('data.0.description', 'Large income');
+        $this->actingAs($user)->getJson('/api/expenses?search=50')
+            ->assertJsonFragment(['description' => 'Small expense']);
+    }
 }

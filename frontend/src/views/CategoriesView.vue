@@ -1,5 +1,5 @@
 <script setup>
-import { nextTick, onMounted, reactive, ref } from 'vue'
+import { nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { api } from '../api/client'
 import PaginationBar from '../components/PaginationBar.vue'
 import ConfirmationModal from '../components/ConfirmationModal.vue'
@@ -40,6 +40,11 @@ async function remove() {
   catch (exception) { error.value = exception.response?.data?.message || 'Não foi possível excluir.' }
   finally { removing.value = false }
 }
+let searchTimer
+watch(search, () => {
+  clearTimeout(searchTimer)
+  searchTimer = setTimeout(() => load(), 300)
+})
 onMounted(load)
 </script>
 

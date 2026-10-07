@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+/** Configuração do Tailwind CSS. */
 export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {

@@ -122,19 +122,19 @@ sail down
 Construa e inicie os containers:
 
 ```bash
-./backend/vendor/bin/sail up -d --build
+sail up -d --build
 ```
 
 Crie a chave de segurança da aplicação:
 
 ```bash
-./backend/vendor/bin/sail artisan key:generate
+sail artisan key:generate
 ```
 
 Crie as tabelas e o usuário de demonstração:
 
 ```bash
-./backend/vendor/bin/sail artisan migrate --seed
+sail artisan migrate --seed
 ```
 
 Depois disso, acesse:
@@ -167,43 +167,43 @@ O seeder cria somente os usuários de demonstração. As categorias devem ser ca
 Ver quais containers estão funcionando:
 
 ```bash
-./backend/vendor/bin/sail ps
+sail ps
 ```
 
 Executar os testes:
 
 ```bash
-./backend/vendor/bin/sail artisan test
+sail artisan test
 ```
 
 Apagar os dados e criar novamente o banco de demonstração:
 
 ```bash
-./backend/vendor/bin/sail artisan migrate:fresh --seed
+sail artisan migrate:fresh --seed
 ```
 
 Testar manualmente a procura por despesas que vencem amanhã:
 
 ```bash
-./backend/vendor/bin/sail artisan expenses:dispatch-reminders
+sail artisan expenses:dispatch-reminders
 ```
 
 Ver o que a fila e o agendador estão fazendo:
 
 ```bash
-./backend/vendor/bin/sail logs -f queue scheduler
+sail logs -f queue scheduler
 ```
 
 Parar o projeto:
 
 ```bash
-./backend/vendor/bin/sail down
+sail down
 ```
 
 Iniciar novamente:
 
 ```bash
-./backend/vendor/bin/sail up -d
+sail up -d
 ```
 
 ## Para que serve cada container
@@ -217,7 +217,7 @@ Iniciar novamente:
 
 ## Configuração de e-mail
 
-Por padrão, os e-mails são gravados no arquivo de log da aplicação. Dessa forma, é possível testar sem criar uma conta externa.
+Quando `MAIL_MAILER` não é informado, os e-mails são gravados no arquivo de log da aplicação. Dessa forma, é possível testar sem criar uma conta externa. Para usar o Mailtrap, defina `MAIL_MAILER=smtp` e preencha os dados abaixo.
 
 Para enviar os e-mails ao ambiente de testes do Mailtrap, altere estas informações no arquivo `backend/.env`:
 
@@ -281,5 +281,5 @@ Os testes verificam principalmente se:
 Para executar:
 
 ```bash
-./backend/vendor/bin/sail artisan test
+sail artisan test
 ```
