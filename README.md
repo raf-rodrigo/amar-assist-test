@@ -33,7 +33,8 @@ Cada pessoa possui sua própria conta. Depois de entrar no sistema, ela só cons
 Abra o terminal e entre na pasta do projeto:
 
 ```bash
-cd /home/rafael-rodrigo/Documentos/Testes_Processos_Seletivo/amar_assist
+cd /home/usuario
+/Documentos/Testes_Processos_Seletivo/amar_assist
 ```
 
 ### Primeira instalação
@@ -99,7 +100,7 @@ Esse alias funciona enquanto o terminal estiver aberto. Como ele usa um caminho 
 Para disponibilizar o alias em novos terminais, adicione ao final do arquivo `~/.bashrc`:
 
 ```bash
-alias sail='/home/rafael-rodrigo/Documentos/Testes_Processos_Seletivo/amar_assist/backend/vendor/bin/sail'
+alias sail='/home/usuario/Documentos/Testes_Processos_Seletivo/amar_assist/backend/vendor/bin/sail'
 ```
 
 Depois, atualize o terminal:
